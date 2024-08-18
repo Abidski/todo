@@ -1,0 +1,61 @@
+import express from "express";
+import pool from "./db.js";
+import "dotenv/config";
+import bodyParser from "body-parser";
+
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+
+//get all todo
+app.get("/", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM todo");
+    res.send(result.rows);
+    console.log(result.rows);
+  } catch (err) {
+    console.error(err);
+  }
+});
+
+//add
+app.post("/add", async (req, res) => {
+  const result = req.body.description;
+  console.log(typeof result);
+  try {
+    await pool.query("INSERT INTO todo (description) VALUES ($1)", [result]);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+//edit
+app.patch("/edit", async (req, res) => {
+  const id = req.body.id;
+  const newInfo = req.body.update;
+  try {
+    await pool.query("UPDATE todo SET description = $1  WHERE id = $2", [
+      newInfo,
+      id,
+    ]);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+//delete
+app.delete("/delete", async (req, res) => {
+  const id = req.body.id;
+  try {
+    await pool.query("DELETE FROM todo WHERE id = $1", [id]);
+    res.redirect("/");
+  } catch (err) {
+    console.error(err.message);
+  }
+});
+
+app.listen(port, () => {
+  console.log(`Server running in port ${port}`);
+});
