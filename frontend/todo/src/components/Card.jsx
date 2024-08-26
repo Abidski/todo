@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
 
 const Card = (props) => {
-    return <p>{props.description}</p>;
+    return (
+        <div>
+            <p>{props.description}</p>
+        </div>
+    );
 };
 
 export default Card;

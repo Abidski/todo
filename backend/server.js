@@ -25,10 +25,13 @@ app.get("/", async (req, res) => {
 //add a todo
 app.post("/add", async (req, res) => {
     const result = req.body.description;
-    console.log(result);
     try {
-        await pool.query("INSERT INTO todo (description) VALUES ($1)", [result]);
-        res.redirect("/");
+        const newTodo = await pool.query(
+            "INSERT INTO todo (description) VALUES ($1) RETURNING *",
+            [result],
+        );
+        console.log(newTodo.rows[0]);
+        res.json(newTodo.rows[0]);
     } catch (err) {
         console.error(err.message);
     }
