@@ -3,7 +3,7 @@
 
 ## Requirments
 
-A full-stack application that allows user to add, edit and delete tasks.
+A full-stack application that allows user to add, edit and delete tasks. While following freecodecamp.
 
 ##  Skills used
 
